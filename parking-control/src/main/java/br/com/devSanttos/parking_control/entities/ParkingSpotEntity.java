@@ -64,6 +64,14 @@ public class ParkingSpotEntity implements Serializable {
         return modelCar;
     }
 
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
     public void setModelCar(String modelCar) {
         this.modelCar = modelCar;
     }

@@ -1,7 +1,8 @@
 package br.com.devSanttos.parking_control.services;
 
+import br.com.devSanttos.parking_control.entities.ParkingSpotEntity;
 import br.com.devSanttos.parking_control.repositories.ParkingSpotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,5 +14,8 @@ public class ParkingSpotService {
         this.parkingSpotRepository = parkingSpotRepository;
     }
 
-
+    @Transactional
+    public ParkingSpotEntity create(ParkingSpotEntity parkingSpotEntity) {
+        return parkingSpotRepository.save(parkingSpotEntity);
+    }
 }
