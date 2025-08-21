@@ -3,7 +3,6 @@ package br.com.devSanttos.parking_control.controllers;
 import br.com.devSanttos.parking_control.dtos.ParkingSpotDto;
 import br.com.devSanttos.parking_control.entities.ParkingSpotEntity;
 import br.com.devSanttos.parking_control.services.ParkingSpotService;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -49,5 +50,22 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") UUID id) {
+        Optional<ParkingSpotEntity> parkingSpotEntityOptional = parkingSpotService.findById(id);
+        if(!parkingSpotEntityOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot não encontrado!");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotEntityOptional.get());
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id) {
+        Optional<ParkingSpotEntity> parkingSpotEntityOptional = parkingSpotService.findById(id);
+        if(!parkingSpotEntityOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot inexistente!");
+        }
+        parkingSpotService.delete(parkingSpotEntityOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Parking spot removido com sucesso!");
+    }
 }

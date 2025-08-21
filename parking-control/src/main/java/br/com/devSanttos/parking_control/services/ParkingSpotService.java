@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
@@ -35,5 +37,14 @@ public class ParkingSpotService {
 
     public List<ParkingSpotEntity> findAll() {
         return parkingSpotRepository.findAll();
+    }
+
+    public Optional<ParkingSpotEntity> findById(UUID id) {
+        return parkingSpotRepository.findById(id);
+    }
+
+    @Transactional
+    public void delete(ParkingSpotEntity parkingSpotEntity) {
+        parkingSpotRepository.delete(parkingSpotEntity);
     }
 }
