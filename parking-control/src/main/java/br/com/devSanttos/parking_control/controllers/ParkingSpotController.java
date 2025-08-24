@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,8 @@ public class ParkingSpotController {
 
         var parkingSpotEntity = new ParkingSpotEntity();
         BeanUtils.copyProperties(parkingSpotDto, parkingSpotEntity);
-        parkingSpotEntity.setRegistrationDate(java.time.LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+        parkingSpotEntity.setRegistrationDate(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.create(parkingSpotEntity));
     }
 
@@ -57,6 +59,22 @@ public class ParkingSpotController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot não encontrado!");
         }
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotEntityOptional.get());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id,
+                                                    @RequestBody @Valid ParkingSpotDto parkingSpotDto) {
+        Optional<ParkingSpotEntity> parkingSpotEntityOptional = parkingSpotService.findById(id);
+        if(!parkingSpotEntityOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking spot não encontrado!");
+        }
+
+        var parkingSpotEntity = new ParkingSpotEntity();
+        BeanUtils.copyProperties(parkingSpotDto, parkingSpotEntity);
+        parkingSpotEntity.setId(parkingSpotEntityOptional.get().getId());
+        parkingSpotEntity.setRegistrationDate(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.create(parkingSpotEntity));
     }
 
     @DeleteMapping("/{id}")
